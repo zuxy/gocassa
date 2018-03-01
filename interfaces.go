@@ -8,6 +8,9 @@ import (
 // Use ConnectToKeySpace to acquire an instance of KeySpace without getting a Connection.
 type Connection interface {
 	CreateKeySpace(name string) error
+	CreateKeySpaceIfNotExist(name string) error
+	CreateKeySpaceSimple(name string, factor int) error
+	CreateKeySpaceIfNotExistSimple(name string, factor int) error
 	DropKeySpace(name string) error
 	KeySpace(name string) KeySpace
 	Close()

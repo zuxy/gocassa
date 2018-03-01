@@ -35,6 +35,24 @@ func (c *connection) CreateKeySpace(name string) error {
 	return c.q.Execute(stmt)
 }
 
+// CreateKeySpaceIfNotExist creates a keyspace with the given name if it doesn't already exist. Only used to create test keyspaces.
+func (c *connection) CreateKeySpaceIfNotExist(name string) error {
+	stmt := fmt.Sprintf("CREATE KEYSPACE IF NOT EXISTS %s WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1 };", name)
+	return c.q.Execute(stmt)
+}
+
+// CreateKeySpaceSimple creates a SimpleStrategy keyspace with the given name and replication factor.
+func (c *connection) CreateKeySpaceSimple(name string, factor int) error {
+	stmt := fmt.Sprintf("CREATE KEYSPACE %s WITH replication = {'class': 'SimpleStrategy', 'replication_factor': %v };", name, factor)
+	return c.q.Execute(stmt)
+}
+
+// CreateKeySpaceIfNotExist creates a SimpleStrategy keyspace with the given name and replication factor.
+func (c *connection) CreateKeySpaceIfNotExistSimple(name string, factor int) error {
+	stmt := fmt.Sprintf("CREATE KEYSPACE IF NOT EXISTS %s WITH replication = {'class': 'SimpleStrategy', 'replication_factor': %v };", name, factor)
+	return c.q.Execute(stmt)
+}
+
 // DropKeySpace drops the keyspace having the given name.
 func (c *connection) DropKeySpace(name string) error {
 	stmt := fmt.Sprintf("DROP KEYSPACE IF EXISTS %s", name)
