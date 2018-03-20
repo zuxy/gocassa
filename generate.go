@@ -111,12 +111,14 @@ func createKeyspace(keyspaceName string) string {
 
 func cassaType(i interface{}) gocql.Type {
 	switch i.(type) {
-	case int, int32:
+	case int, int32, uint, uint32:
 		return gocql.TypeInt
-	case int64:
+	case int64, uint64:
 		return gocql.TypeBigInt
-	case int8, int16, uint, uint8, uint16, uint32, uint64:
-		return gocql.TypeVarint
+	case int8, uint8:
+		return gocql.TypeTinyInt
+	case int16, uint16:
+		return gocql.TypeSmallInt
 	case string:
 		return gocql.TypeVarchar
 	case float32:
@@ -138,8 +140,12 @@ func cassaType(i interface{}) gocql.Type {
 	// Fallback to using reflection if type not recognised
 	typ := reflect.TypeOf(i)
 	switch typ.Kind() {
-	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32:
+	case reflect.Int, reflect.Int32:
 		return gocql.TypeInt
+	case reflect.Int16:
+		return gocql.TypeSmallInt
+	case reflect.Int8:
+		return gocql.TypeTinyInt
 	case reflect.Int64:
 		return gocql.TypeBigInt
 	case reflect.String:
@@ -191,6 +197,10 @@ func cassaTypeToString(t gocql.Type) (string, error) {
 		return "int", nil
 	case gocql.TypeBigInt:
 		return "bigint", nil
+	case gocql.TypeSmallInt:
+		return "smallint", nil
+	case gocql.TypeTinyInt:
+		return "tinyint", nil
 	case gocql.TypeVarint:
 		return "varint", nil
 	case gocql.TypeVarchar:
