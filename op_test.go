@@ -69,7 +69,7 @@ var opTestRowExpected = OpTestStruct{
 func TestDecodeRow(t *testing.T) {
 	var result []OpTestStruct
 
-	err := decodeResult([]map[string]interface{}{opTestRow}, &result)
+	err := decodeResult([]map[string]interface{}{opTestRow}, &result, Options{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -86,7 +86,7 @@ func TestDecodeRow(t *testing.T) {
 func TestDecodeSingleRow(t *testing.T) {
 	var result OpTestStruct
 
-	err := decodeResult(opTestRow, &result)
+	err := decodeResult(opTestRow, &result, Options{})
 	if err != nil {
 		t.Fatal(err)
 	}

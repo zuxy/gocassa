@@ -67,7 +67,7 @@ func (w *singleOp) read() error {
 		return err
 	}
 
-	return decodeResult(maps, w.result)
+	return decodeResult(maps, w.result, w.options)
 }
 
 func (w *singleOp) readOne() error {
@@ -83,7 +83,7 @@ func (w *singleOp) readOne() error {
 			line: n,
 		}
 	}
-	return decodeResult(maps[0], w.result)
+	return decodeResult(maps[0], w.result, w.options)
 }
 
 func (w *singleOp) write() error {
@@ -293,16 +293,18 @@ func updateStatement(kn, cfName string, fields map[string]interface{}, opts Opti
 	return buf.String(), ret
 }
 
-func decodeResult(m, result interface{}) error {
-	dec, err := mapstructure.NewDecoder(&mapstructure.DecoderConfig{
+func decodeResult(m, result interface{}, opt Options) error {
+	cfg := mapstructure.DecoderConfig{
 		ZeroFields:       true,
 		WeaklyTypedInput: true,
 		Result:           result,
 		TagName:          rreflect.TagName,
-		DecodeHook: mapstructure.ComposeDecodeHookFunc(
-			decodeBigIntHook,
-		),
-	})
+	}
+	if opt.AllowArbitraryPrecision {
+		cfg.DecodeHook = mapstructure.ComposeDecodeHookFunc(
+			decodeBigIntHook)
+	}
+	dec, err := mapstructure.NewDecoder(&cfg)
 	if err != nil {
 		return err
 	}

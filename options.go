@@ -46,6 +46,8 @@ type Options struct {
 	ClusteringOrder []ClusteringOrderColumn
 	// Indicates if allow filtering should be appended at the end of the query
 	AllowFiltering bool
+	// Indicates if integer larger than int64 should be supported
+	AllowArbitraryPrecision bool
 	// Select allows you to do partial reads, ie. retrieve only a subset of fields
 	Select []string
 	// Consistency specifies the consistency level. If nil, it is considered not set
