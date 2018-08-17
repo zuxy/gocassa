@@ -2,6 +2,7 @@ package gocassa
 
 import (
 	"errors"
+	"time"
 
 	"github.com/gocql/gocql"
 )
@@ -75,6 +76,7 @@ func newGoCQLBackend(nodeIps []string, username, password string) (QueryExecutor
 		Username: username,
 		Password: password,
 	}
+	cluster.ConnectTimeout, cluster.Timeout = 5*time.Second, 5*time.Second
 	sess, err := cluster.CreateSession()
 	if err != nil {
 		return nil, err
